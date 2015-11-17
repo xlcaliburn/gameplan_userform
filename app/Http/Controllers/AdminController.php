@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Database\EloquentModelNotFoundException;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -49,10 +50,11 @@ class AdminController extends Controller
         $input = Input::all();
         User::create($input);
 
-        // Mail::send('email/form', $input, function($message)
-        // {
-        //     $message->to('michaelchunkitwong@gmail.com', 'Michael Wong')->subject('A new user has been added');
-        // });
+        $sent = Mail::send('email/form', $input, function($message)
+        {
+            $message->from('mikalz5@gmail.com', 'Server');
+            $message->to('michaelchunkitwong@gmail.com', 'Administrator')->subject('Notification: A new user has been added');
+        });
 
         return redirect('/')->with('success', 'New user created successfully');
     }
@@ -65,7 +67,13 @@ class AdminController extends Controller
      */
     public function edit($id)
     {
-        $user = User::find($id);
+        try {
+            $user = User::findOrFail($id);
+        } 
+        catch(ModelNotFoundException $e) {
+            dd($e);
+        }
+
         return view('pages/edit', compact('user'));
     }
 
@@ -80,7 +88,13 @@ class AdminController extends Controller
     {
         $this->validate($request, $this->updateRules);
 
-        $user = User::findOrFail($id);
+        try {
+            $user = User::findOrFail($id);
+        } 
+        catch(ModelNotFoundException $e) {
+            dd($e);
+        }
+        
         $input = Input::except('_method', '_token');
         $user->update($request->all());
 

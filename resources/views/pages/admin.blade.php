@@ -2,19 +2,6 @@
 
 @section('content')
 
-<style>
-body{
-	background: url("/images/stardust.png");
-}
-
-.table-responsive {
-	background: rgba(255, 255, 255, 0.8);
-	box-shadow: rgba(0, 0, 0, 0.3) 20px 20px 20px;
-	margin-top: 40px;
-}
-
-</style>
-
 @if(Session::has('success'))
 	<div class="alert alert-success">
 	<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
